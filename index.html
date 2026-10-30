@@ -35,6 +35,17 @@ input[type=text]{width:100%;margin:3px 0}#as{height:70px}
 <div id="card" tabindex="0"></div>
 <div class="ctl"><button id="prev">←</button><button id="no">もう一度</button><button id="ok" class="p">覚えた</button><button id="next">→</button></div>
 <div class="st" id="st"></div>
+ <details><summary>管理(リセット・書き出し・単語追加)</summary>
+<button id="reset">習得状況をリセット</button>
+<button id="exp">書き出し(JSON)</button>
+<div>
+<input type="text" id="aw" placeholder="古語">
+<input type="text" id="ag" placeholder="品詞・活用">
+<textarea id="as" placeholder="意味(1行に1つ)"></textarea>
+<input type="text" id="ae" placeholder="例文">
+<input type="text" id="at" placeholder="訳">
+<button id="addb" class="p">追加</button> <span id="am" class="st"></span>
+</div>
 <span id="msg" class="st"></span><textarea id="ta" readonly></textarea></details>
 <script>
 const WORDS=[
