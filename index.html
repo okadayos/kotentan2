@@ -30,6 +30,7 @@ input[type=text]{width:100%;margin:3px 0}#as{height:70px}
 <select id="mode"><option value="0">古語 → 意味</option><option value="1">意味 → 古語</option></select>
 <label><input type="checkbox" id="sh" checked> シャッフル</label>
 <label><input type="checkbox" id="un"> 未習得のみ</label>
+ <label>範囲 No.<input type="number" id="r1" value="1" min="1" style="width:4.5em"> 〜 <input type="number" id="r2" value="315" min="1" style="width:4.5em"></label>
 <button id="go" class="p">開始</button>
 </div>
 <div id="card" tabindex="0"></div>
@@ -3528,7 +3529,10 @@ function auto(w){if(!w.ex||w.ex.includes('**'))return;
 const alts=[...w.word.matchAll(/[（(]([^）)]*)[）)]/g)].flatMap(m=>m[1].split('・'));
 const c=[w.word.replace(/[（(].*$/,''),...alts].flatMap(x=>x.split('・')).flatMap(x=>[x,x.slice(0,-1)]).filter(x=>x.length>=2).sort((a,b)=>b.length-a.length);
 const h=c.find(x=>w.ex.includes(x));if(h)w.ex=w.ex.replace(h,'**'+h+'**')}
-function build(){deck=ALL.filter(w=>!$('#un').checked||!known.has(w.id));
+function build(){let a=+$('#r1').value||1,b=+$('#r2').value||9999;if(a>b)[a,b]=[b,a];
+deck=ALL.filter(w=>w.id>=a&&w.id<=b&&(!$('#un').checked||!known.has(w.id)));
+if($('#sh').checked)for(let k=deck.length-1;k>0;k--){const j=Math.random()*(k+1)|0;[deck[k],deck[j]]=[deck[j],deck[k]]}
+i=0;flip=false;show()}
 if($('#sh').checked)for(let k=deck.length-1;k>0;k--){const j=Math.random()*(k+1)|0;[deck[k],deck[j]]=[deck[j],deck[k]]}
 i=0;flip=false;show()}
 function show(){const c=$('#card');
@@ -3546,6 +3550,7 @@ const go=d=>{if(!deck.length)return;i=(i+d+deck.length)%deck.length;flip=false;s
 const mark=k=>{if(!deck.length)return;const id=deck[i].id;k?known.add(id):known.delete(id);ls('kobun_known',JSON.stringify([...known]));go(1)};
 $('#card').onclick=()=>{flip=!flip;show()};
 $('#go').onclick=build;$('#mode').onchange=build;
+ ['r1','r2','un','sh'].forEach(k=>$('#'+k).onchange=build);
 $('#prev').onclick=()=>go(-1);$('#next').onclick=()=>go(1);
 $('#ok').onclick=()=>mark(1);$('#no').onclick=()=>mark(0);
 $('#reset').onclick=()=>{known=new Set();ls('kobun_known','[]');build()};
