@@ -3582,7 +3582,7 @@ const s=p.map(w=>`<li>${t?hl(w.tr):esc(w.senses.join(' '))}</li>`).join('');
 $('#tst').innerHTML=`<h3>${t?'次の文を現代語訳せよ(太字の語に注意)':'次の古語の意味を答えよ'}(No.${a}〜${b}・${p.length}問)</h3><ol>${q}</ol><details><summary>解答</summary><ol>${s}</ol></details>`};
 $('#tp').onclick=()=>{if(!$('#tst').textContent)return;const d=$('#tst details');if(d)d.open=true;document.body.classList.add('pt');window.print()};
 window.onafterprint=()=>document.body.classList.remove('pt');
-<summary>解答</summary><ol>${s}</ol></details>`};                      
+$('#addb').onclick=()=>{const w=$('#aw').value.trim(),s=$('#as').value.split(/\n/).map(x=>x.trim()).filter(Boolean);                
 if(!w||!s.length){$('#am').textContent='古語と意味は必須です';return}
 const e={id:Math.max(315,...ALL.map(x=>x.id))+1,word:w,gram:$('#ag').value.trim(),senses:s,ex:$('#ae').value.trim(),tr:$('#at').value.trim()};
 auto(e);extra.push(e);ls('kobun_extra',JSON.stringify(extra));ALL=ALL.concat(e);
