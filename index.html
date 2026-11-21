@@ -3533,8 +3533,7 @@ function build(){let a=+$('#r1').value||1,b=+$('#r2').value||9999;if(a>b)[a,b]=[
 deck=ALL.filter(w=>w.id>=a&&w.id<=b&&(!$('#un').checked||!known.has(w.id)));
 if($('#sh').checked)for(let k=deck.length-1;k>0;k--){const j=Math.random()*(k+1)|0;[deck[k],deck[j]]=[deck[j],deck[k]]}
 i=0;flip=false;show()}
-if($('#sh').checked)for(let k=deck.length-1;k>0;k--){const j=Math.random()*(k+1)|0;[deck[k],deck[j]]=[deck[j],deck[k]]}
-i=0;flip=false;show()}
+
 function show(){const c=$('#card');
 if(!deck.length){c.innerHTML='<div class="g">該当するカードがありません</div>';$('#st').textContent='';return}
 const w=deck[i],rev=$('#mode').value==='1';
