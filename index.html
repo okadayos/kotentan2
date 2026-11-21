@@ -2,7 +2,17 @@
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>古文単語315 フラッシュカード</title>
+ 
 <style>
+ @media print{
+body.pt{background:#fff;color:#000}
+body.pt main>*:not(#tw){display:none}
+body.pt #tw>summary,body.pt .nop{display:none}
+body.pt #tst ol li{margin-bottom:2em}
+body.pt #tst b{background:none;color:#000;text-decoration:underline}
+body.pt #tst details{break-before:page}
+body.pt #tst details summary{display:none}
+}
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f3ec;--fg:#2b2622;--card:#fffdf8;--mut:#7a7066;--acc:#9c3b2e;--bd:#ddd5c6}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1b19;--fg:#ece6da;--card:#272421;--mut:#a39a8d;--acc:#e0806f;--bd:#3d3833}}
 :root[data-theme="dark"]{--bg:#1d1b19;--fg:#ece6da;--card:#272421;--mut:#a39a8d;--acc:#e0806f;--bd:#3d3833}
@@ -27,6 +37,13 @@ input[type=text]{width:100%;margin:3px 0}#as{height:70px}
 </style></head><body><main>
 <h1>古文単語315 フラッシュカード</h1>
 <div class="bar">
+ <details open id="tw"><summary>テスト作成</summary>
+<span class="nop">
+<select id="tt"><option value="0">単語(意味を答える)</option><option value="1">例文の訳</option></select>
+<label>問数<input type="number" id="tn" value="30" min="1" style="width:4em"></label>
+<button id="tg" class="p">作成</button> <button id="tp">印刷/PDF</button>
+</span>
+<div id="tst"></div></details>
 <select id="mode"><option value="0">古語 → 意味</option><option value="1">意味 → 古語</option></select>
 <label><input type="checkbox" id="sh" checked> シャッフル</label>
 <label><input type="checkbox" id="un"> 未習得のみ</label>
@@ -3555,6 +3572,17 @@ $('#ok').onclick=()=>mark(1);$('#no').onclick=()=>mark(0);
 $('#reset').onclick=()=>{known=new Set();ls('kobun_known','[]');build()};
 $('#exp').onclick=()=>{const t=JSON.stringify(ALL.map(({id,word,gram,senses,ex,tr})=>({id,word,gram,senses,ex,tr})),null,1);$('#ta').value=t;const n=`${ALL.length}語を書き出しました`;try{navigator.clipboard.writeText(t).then(()=>$('#msg').textContent=n+'(コピー済み)',()=>$('#msg').textContent=n)}catch(e){$('#msg').textContent=n}};
 $('#addb').onclick=()=>{const w=$('#aw').value.trim(),s=$('#as').value.split(/\n/).map(x=>x.trim()).filter(Boolean);
+$('#tg').onclick=()=>{let a=+$('#r1').value||1,b=+$('#r2').value||9999;if(a>b)[a,b]=[b,a];
+$('#tp').onclick=()=>{if(!$('#tst').textContent)return;const d=$('#tst details');if(d)d.open=true;document.body.classList.add('pt');window.print()};
+window.onafterprint=()=>document.body.classList.remove('pt');                      
+const t=$('#tt').value==='1';
+let p=ALL.filter(w=>w.id>=a&&w.id<=b&&(!t||(w.ex&&w.tr&&w.ex.includes('**'))));
+for(let k=p.length-1;k>0;k--){const j=Math.random()*(k+1)|0;[p[k],p[j]]=[p[j],p[k]]}
+p=p.slice(0,+$('#tn').value||30);
+if(!p.length){$('#tst').textContent='該当する問題がありません';return}
+const q=p.map(w=>`<li>${t?hl(w.ex):esc(w.word)+' <span class="g">'+esc(w.gram)+'</span>'}</li>`).join('');
+const s=p.map(w=>`<li>${t?hl(w.tr):esc(w.senses.join(' '))}</li>`).join('');
+$('#tst').innerHTML=`<h3>${t?'次の文を現代語訳せよ(太字の語に注意)':'次の古語の意味を答えよ'}(No.${a}〜${b}・${p.length}問)</h3><ol>${q}</ol><details><summary>解答</summary><ol>${s}</ol></details>`};                      
 if(!w||!s.length){$('#am').textContent='古語と意味は必須です';return}
 const e={id:Math.max(315,...ALL.map(x=>x.id))+1,word:w,gram:$('#ag').value.trim(),senses:s,ex:$('#ae').value.trim(),tr:$('#at').value.trim()};
 auto(e);extra.push(e);ls('kobun_extra',JSON.stringify(extra));ALL=ALL.concat(e);
